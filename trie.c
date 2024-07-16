@@ -30,9 +30,14 @@ Returns true if word is inserted successfully, false otherwise
 Time complexity: O(N) where N is the length of the word being inserted
 */
 int trie_insert(Trie *t, const char *word) {
+    /* Check for valid parameters */
+    if(!t || !word) {
+        return 0;
+    }
+
     TrieNode *curr = t->root;
     for(int curr_char = 0; curr_char < strlen(word); curr_char++) {
-        /* Check for invalid character */
+        /* Check for invalid character in word */
         if(word[curr_char] < CHAR_MIN || word[curr_char] > CHAR_MAX) {
             return 0;
         }
@@ -54,8 +59,10 @@ Words (is_terminal is true) are marked with an asterisk
 Time compexity: O(N) where N is the number of prefixes or nodes in the trie
 */
 void trie_display(Trie *t) {
-    TrieNode *curr = t->root;
-    trie_display_helper(curr, "");
+    if(t) {
+        TrieNode *curr = t->root;
+        trie_display_helper(curr, "");
+    }
 }
 
 /*
@@ -96,8 +103,18 @@ static void trie_display_helper(TrieNode *curr, char *prefix) {
 Returns 1 if the word exists in the trie, 0 otherwise
 */
 int trie_contains_word(Trie *t, const char *word) {
+    /* Check for valid parameters */
+    if(!t || !word) {
+        return 0;
+    }
+
     TrieNode *curr = t->root;
     for(int curr_char = 0; curr_char < strlen(word); curr_char++) {
+        /* Check for invalid character in word */
+        if(word[curr_char] < CHAR_MIN || word[curr_char] > CHAR_MAX) {
+            return 0;
+        }
+
         curr = curr->chars[word[curr_char] - CHAR_MIN];
         if(!curr) {
             return 0;
