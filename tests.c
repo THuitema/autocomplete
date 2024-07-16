@@ -35,16 +35,23 @@ static int test_trie_insert(void) {
     if(!a || !a->is_terminal) {
         return FAILURE;
     }
+    
+    /* Test that a prefix is not labeled as terminal */
+    trie_insert(t, "apple");
+    if(a->chars['p' - 'a']->is_terminal == 1) {
+        return FAILURE;
+    }
 
     /* Test a word with invalid characters cannot be inserted */
     if(trie_insert(t, "heLLo") != 0) {
-        return FAILURE
+        return FAILURE;
     }
 }
 
 int main(void) {
     int status = SUCCESS;
     if(test_trie_init() == FAILURE) status = FAILURE;
+    if(test_trie_insert() == FAILURE) status = FAILURE;
 
     if(status == FAILURE) {
         printf("Test(s) failed\n");
