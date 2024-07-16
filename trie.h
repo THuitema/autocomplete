@@ -19,5 +19,5 @@ typedef struct {
 Trie* trie_init(void);
 int trie_insert(Trie *t, const char *word);
 void trie_display(Trie *t);
-// int trie_contains(Trie *t, const char *word);
+int trie_contains_word(Trie *t, const char *word);
 // int trie_delete_word(Trie *t, const char *word);

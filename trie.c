@@ -3,8 +3,8 @@
 #include <string.h>
 #include "trie.h"
 
-static void trie_display_helper(TrieNode *curr, char *prefix);
 static TrieNode* trie_node_create(void);
+static void trie_display_helper(TrieNode *curr, char *prefix);
 
 /*
 Returns a pointer to a new TrieNode with is_terminal set to false
@@ -31,17 +31,17 @@ Time complexity: O(N) where N is the length of the word being inserted
 */
 int trie_insert(Trie *t, const char *word) {
     TrieNode *curr = t->root;
-    for(int i = 0; i < strlen(word); i++) {
+    for(int curr_char = 0; curr_char < strlen(word); curr_char++) {
         /* Check for invalid character */
-        if(word[i] < CHAR_MIN || word[i] > CHAR_MAX) {
+        if(word[curr_char] < CHAR_MIN || word[curr_char] > CHAR_MAX) {
             return 0;
         }
 
         /* Create new prefix path if it doesn't exist yet */
-        if(!curr->chars[word[i] - CHAR_MIN]) {
-            curr->chars[word[i] - CHAR_MIN] = trie_node_create();
+        if(!curr->chars[word[curr_char] - CHAR_MIN]) {
+            curr->chars[word[curr_char] - CHAR_MIN] = trie_node_create();
         } 
-        curr = curr->chars[word[i] - CHAR_MIN];
+        curr = curr->chars[word[curr_char] - CHAR_MIN];
     }
 
     curr->is_terminal = 1; /* curr is the end of the word, so make it a terminal node */
@@ -64,7 +64,7 @@ Prints the prefix at curr
 Performs depth-first search on each child pointer
 */
 static void trie_display_helper(TrieNode *curr, char *prefix) {
-    /* Print word */
+    /* Print word, indent based on which layer of the tree the current node is */
     for(int i = 0; i < strlen(prefix); i++) {
         printf("  ");
     }
@@ -92,4 +92,16 @@ static void trie_display_helper(TrieNode *curr, char *prefix) {
     }
 }
 
-
+/*
+Returns 1 if the word exists in the trie, 0 otherwise
+*/
+int trie_contains_word(Trie *t, const char *word) {
+    TrieNode *curr = t->root;
+    for(int curr_char = 0; curr_char < strlen(word); curr_char++) {
+        curr = curr->chars[word[curr_char] - CHAR_MIN];
+        if(!curr) {
+            return 0;
+        }
+    }
+    return curr->is_terminal;
+}

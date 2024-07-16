@@ -23,5 +23,9 @@ int main(void) {
     trie_insert(prefix_tree, "always");
     trie_insert(prefix_tree, "a");
     trie_display(prefix_tree);
+    printf("Tree contains app: %d\n", trie_contains_word(prefix_tree, "app"));
+    printf("Tree contains aple: %d\n", trie_contains_word(prefix_tree, "aple"));
+    printf("Tree contains ap: %d\n", trie_contains_word(prefix_tree, "ap"));
+
     return 0;
 }
