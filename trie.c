@@ -8,6 +8,7 @@ static void trie_display_helper(TrieNode *curr, char *prefix);
 static int trie_delete_word_helper(TrieNode *curr, const char *word);
 static void trie_node_delete(TrieNode *t);
 static TrieNode* trie_get_prefix(Trie *t, const char *prefix);
+static void trie_get_words_helper(TrieNode *curr, const char *prefix);
 
 /*
 Returns a pointer to a new TrieNode with is_terminal set to false
@@ -219,5 +220,33 @@ Prints all words in the trie that start with prefix to standard output
 Printed in alphabetical order
 */
 void trie_get_words(Trie *t, const char *prefix) {
+    TrieNode *curr = trie_get_prefix(t, prefix);
+    if(curr) {
+        trie_get_words_helper(curr, prefix);
+    }
+}
 
+/* TODO: Change to make this breadth-first traversal (words printed shortest to longest) */
+static void trie_get_words_helper(TrieNode *curr, const char *prefix) {
+    /* Print if prefix is a word */
+    if(curr->is_terminal) {
+        printf("%s\n", prefix);
+    }
+
+    /* Loop through each character pointer */
+    for(int i = 0; i < NUM_CHARS; i++) {
+        if(curr->chars[i]) {
+            /* Append current char to prefix*/
+            char c_to_str[2];
+            c_to_str[1] = '\0';
+            c_to_str[0] = CHAR_MIN + i;
+
+            char new_prefix[strlen(prefix) + 2];
+            new_prefix[0] = '\0';
+            strcat(new_prefix, prefix);
+            strcat(new_prefix, c_to_str);
+            trie_get_words_helper(curr->chars[i], new_prefix);
+        }
+        
+    }
 }

@@ -22,3 +22,4 @@ int trie_insert(Trie *t, const char *word);
 void trie_display(Trie *t);
 int trie_contains_word(Trie *t, const char *word);
 void trie_delete_word(Trie *t, const char *word);
+void trie_get_words(Trie *t, const char *prefix);
