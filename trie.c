@@ -7,6 +7,7 @@ static TrieNode* trie_node_create(void);
 static void trie_display_helper(TrieNode *curr, char *prefix);
 static int trie_delete_word_helper(TrieNode *curr, const char *word);
 static void trie_node_delete(TrieNode *t);
+static TrieNode* trie_get_prefix(Trie *t, const char *prefix);
 
 /*
 Returns a pointer to a new TrieNode with is_terminal set to false
@@ -110,27 +111,37 @@ static void trie_display_helper(TrieNode *curr, char *prefix) {
 }
 
 /*
-Returns 1 if the word exists in the trie, 0 otherwise
+Returns a pointer to the TrieNode at prefix.
+If prefix isn't in the trie, NULL is returned
 */
-int trie_contains_word(Trie *t, const char *word) {
-    /* Check for valid parameters */
-    if(!t || !word) {
-        return 0;
+static TrieNode* trie_get_prefix(Trie *t, const char *prefix) {
+    if(!t || !prefix) {
+        return NULL;
     }
 
     TrieNode *curr = t->root;
-    for(int curr_char = 0; curr_char < strlen(word); curr_char++) {
+
+    for(int curr_char = 0; curr_char < strlen(prefix); curr_char++) {
         /* Check for invalid character in word */
-        if(word[curr_char] < CHAR_MIN || word[curr_char] > CHAR_MAX) {
-            return 0;
+        if(prefix[curr_char] < CHAR_MIN || prefix[curr_char] > CHAR_MAX) {
+            return NULL;
         }
 
-        curr = curr->chars[word[curr_char] - CHAR_MIN];
+        curr = curr->chars[prefix[curr_char] - CHAR_MIN];
         if(!curr) {
-            return 0;
+            return NULL;
         }
     }
-    return curr->is_terminal;
+
+    return curr;
+}
+
+/*
+Returns 1 if the word exists in the trie, 0 otherwise
+*/
+int trie_contains_word(Trie *t, const char *word) {
+    TrieNode *prefix = trie_get_prefix(t, word);
+    return prefix && prefix->is_terminal;
 }
 
 /*
@@ -202,3 +213,11 @@ static int trie_delete_word_helper(TrieNode *curr, const char *word) {
     }
 }
 
+
+/*
+Prints all words in the trie that start with prefix to standard output
+Printed in alphabetical order
+*/
+void trie_get_words(Trie *t, const char *prefix) {
+
+}
