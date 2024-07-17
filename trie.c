@@ -5,6 +5,8 @@
 
 static TrieNode* trie_node_create(void);
 static void trie_display_helper(TrieNode *curr, char *prefix);
+static int trie_delete_word_helper(TrieNode *curr, const char *word);
+static void trie_node_delete(TrieNode *t);
 
 /*
 Returns a pointer to a new TrieNode with is_terminal set to false
@@ -15,12 +17,20 @@ static TrieNode* trie_node_create(void) {
 }
 
 /*
+Free the memory associated with the given TrieNode
+*/
+static void trie_node_delete(TrieNode *t) {
+    free(t);
+}
+
+/*
 Returns a pointer to a Trie with its root initialized
 Time complexity: O(1)
 */
 Trie* trie_init(void) {
     Trie *trie = malloc(sizeof(Trie));
     trie->root = trie_node_create();
+    trie->root->is_root = 1;
     return trie;
 }
 
@@ -72,7 +82,7 @@ Performs depth-first search on each child pointer
 */
 static void trie_display_helper(TrieNode *curr, char *prefix) {
     /* Print word, indent based on which layer of the tree the current node is */
-    for(int i = 0; i < strlen(prefix); i++) {
+    for(int i = 1; i < strlen(prefix); i++) {
         printf("  ");
     }
     if(curr->is_terminal) {
@@ -122,3 +132,73 @@ int trie_contains_word(Trie *t, const char *word) {
     }
     return curr->is_terminal;
 }
+
+/*
+Deletes the word from the trie, if it exists
+If the word serves as a prefix for other words, the TrieNode is kept and is_terminal is set to 0
+If the word has no children, the TrieNode is deleted and 
+its ancestors are deleted if the deleted word is their only dependency
+*/
+void trie_delete_word(Trie *t, const char *word) {
+    /* Check for valid parameters */
+    if(t && word) {
+        trie_delete_word_helper(t->root, word);
+    }
+}
+
+/*
+Helper function for trie_delete_word()
+Deletes the ancestor nodes of the word to delete if they have no other children
+Returns 1 if the function is done deleting (whether successful or not)
+Returns 0 to continue checking if ancestor nodes can be deleted
+*/
+static int trie_delete_word_helper(TrieNode *curr, const char *word) {
+    /* Word is not in the tree */
+    if(!curr) { 
+        return 1;
+    }
+
+    /* At TrieNode to remove */
+    if(!strcmp(word, "")) { 
+        /* Don't delete if word is actually a prefix */
+        if(!curr->is_terminal) {
+            return 1;
+        }
+
+        curr->is_terminal = 0;
+
+        /* See if it has any children. If not, we can delete the TrieNode */
+        for(int i = 0; i < NUM_CHARS; i++) {
+            if(curr->chars[i]) {
+                return 1;
+            }
+        }
+        trie_node_delete(curr);
+        return 0; /* Return 0 to see if we can delete its parent as well*/
+    } else {
+        /* Check for invalid character in word */
+        if(word[0] < CHAR_MIN || word[0] > CHAR_MAX) {
+            return 1;
+        }
+
+        /* Recursive call */
+        if(!trie_delete_word_helper(curr->chars[word[0] - CHAR_MIN], word + 1)) {
+            /* Delete the node to remove and its parents while they have no other children */
+            curr->chars[word[0] - CHAR_MIN] = NULL;
+
+            /* See if it has any children. If not, we can delete the TrieNode */
+            for(int i = 0; i < NUM_CHARS; i++) {
+                if(curr->chars[i]) {
+                    return 1;
+                }
+            }
+
+            if(!curr->is_root) { /* Stop deleting if we've reached the root of the trie */
+                trie_node_delete(curr);
+                return 0;
+            }
+        } 
+        return 1;
+    }
+}
+

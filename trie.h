@@ -10,6 +10,7 @@ Trie Node
 typedef struct TrieNode {
     struct TrieNode *chars[NUM_CHARS]; /* character = 'a' + index */
     int is_terminal;
+    int is_root;
 } TrieNode;
 
 typedef struct {
@@ -20,4 +21,4 @@ Trie* trie_init(void);
 int trie_insert(Trie *t, const char *word);
 void trie_display(Trie *t);
 int trie_contains_word(Trie *t, const char *word);
-// int trie_delete_word(Trie *t, const char *word);
+void trie_delete_word(Trie *t, const char *word);
