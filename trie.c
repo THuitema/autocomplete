@@ -226,7 +226,6 @@ void trie_get_words(Trie *t, const char *prefix) {
     }
 }
 
-/* TODO: Change to make this breadth-first traversal (words printed shortest to longest) */
 static void trie_get_words_helper(TrieNode *curr, const char *prefix) {
     /* Print if prefix is a word */
     if(curr->is_terminal) {
