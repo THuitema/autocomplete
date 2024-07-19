@@ -12,6 +12,7 @@ User can upload textfile as argument when calling program, has option to add mor
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "trie.h"
 
 #define MAX_COMMAND_LENGTH 256
@@ -67,14 +68,24 @@ Executes the command specified by the user
 */
 static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], int *num_tokens) {
     /* Insert to trie */
-    if(!strcmp(tokens[0], "add")) {
+    if (!strcmp(tokens[0], "add")) {
         for(int token = 1; token < *num_tokens; token++) {
             trie_insert(t, tokens[token]);
         }
     }
     /* Display trie */
-    if(!strcmp(tokens[0], "display")) {
+    else if (!strcmp(tokens[0], "display")) {
         trie_display(t);
+    }
+
+    /* Quit program */
+    else if (!strcmp(tokens[0], "quit")) {
+        exit(EXIT_SUCCESS);
+    }
+
+    /* Invalid Command */
+    else {
+        printf("Invalid command\n");
     }
 }
 
