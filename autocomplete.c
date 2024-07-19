@@ -121,7 +121,8 @@ static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], in
 
     /* Quit program */
     else if (!strcmp(tokens[0], "quit")) {
-        exit(EXIT_SUCCESS); /* Clear and delete tree */
+        trie_delete(t);
+        exit(EXIT_SUCCESS); 
     }
 
     /* Invalid Command */
