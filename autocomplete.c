@@ -96,6 +96,19 @@ static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], in
         }
     }
 
+    /* Contains word */
+    else if (!strcmp(tokens[0], "contains")) {
+        if(*num_tokens == 1) {
+            printf("You must provide a term\n");
+        } else {
+            if(trie_contains_word(t, tokens[1])) {
+                printf("True\n");
+            } else {
+                printf("False\n");
+            }
+        }
+    }
+
     /* Display trie */
     else if (!strcmp(tokens[0], "display")) {
         trie_display(t);
