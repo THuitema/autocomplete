@@ -9,6 +9,7 @@ static int trie_delete_word_helper(TrieNode *curr, const char *word);
 static void trie_node_delete(TrieNode *t);
 static TrieNode* trie_get_prefix(Trie *t, const char *prefix);
 static void trie_get_words_helper(TrieNode *curr, const char *prefix);
+static void trie_clear_node(TrieNode *t);
 
 /*
 Returns a pointer to a new TrieNode with is_terminal set to false
@@ -248,4 +249,39 @@ static void trie_get_words_helper(TrieNode *curr, const char *prefix) {
         }
         
     }
+}
+
+/* 
+Deletes and frees all children of the root node
+i.e. removes all prefixes and words from trie
+*/
+void trie_clear(Trie *t) {
+    TrieNode *curr = t->root;
+    for(int i = 0; i < NUM_CHARS; i++) {
+        trie_clear_node(curr->chars[i]);
+        curr->chars[i] = NULL;
+    }
+}
+
+static void trie_clear_node(TrieNode *curr) {
+    if(!curr) {
+        return;
+    }
+
+    /* Clear its children first */
+    for(int i = 0; i < NUM_CHARS; i++) {
+        trie_clear_node(curr->chars[i]);
+        curr->chars[i] = NULL;
+    }
+
+    trie_node_delete(curr);
+}
+
+/*
+Frees all memory associated with the trie
+*/
+void trie_delete(Trie *t) {
+    trie_clear(t); /* Frees all child nodes of root */
+    trie_node_delete(t->root);
+    free(t);
 }
