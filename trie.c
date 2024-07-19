@@ -89,7 +89,7 @@ static void trie_display_helper(TrieNode *curr, char *prefix) {
     }
     if(curr->is_terminal) {
         printf("*%s*\n", prefix);
-    } else {
+    } else if (!curr->is_root) {
         printf("%s\n", prefix);
     }
 
