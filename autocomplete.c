@@ -77,6 +77,16 @@ static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], in
             }
         }
     }
+
+    /* Remove word */
+    else if (!strcmp(tokens[0], "remove")) {
+        if(*num_tokens == 1) {
+            printf("You must provide a word to remove\n");
+        } else {
+            trie_delete_word(t, tokens[1]);
+        }
+    }
+
     /* Display trie */
     else if (!strcmp(tokens[0], "display")) {
         trie_display(t);
