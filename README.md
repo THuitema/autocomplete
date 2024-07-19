@@ -11,3 +11,4 @@ A shell that performs autocompletion of user search terms using an implementatio
 ### Executing
 
 ### Commands
+ screenshots
