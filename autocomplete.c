@@ -69,8 +69,12 @@ Executes the command specified by the user
 static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], int *num_tokens) {
     /* Insert to trie */
     if (!strcmp(tokens[0], "add")) {
-        for(int token = 1; token < *num_tokens; token++) {
-            trie_insert(t, tokens[token]);
+        if (*num_tokens == 1) {
+            printf("You must provide at least one word to add\n");
+        } else {
+            for(int token = 1; token < *num_tokens; token++) {
+                trie_insert(t, tokens[token]);
+            }
         }
     }
     /* Display trie */
