@@ -87,6 +87,15 @@ static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], in
         }
     }
 
+    /* Search for words using prefix (the autocomplete feature) */
+    else if (!strcmp(tokens[0], "search")) {
+        if(*num_tokens == 1) {
+            printf("You must provide a search term\n");
+        } else {
+            trie_get_words(t, tokens[1]);
+        }
+    }
+
     /* Display trie */
     else if (!strcmp(tokens[0], "display")) {
         trie_display(t);
