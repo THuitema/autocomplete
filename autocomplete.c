@@ -114,9 +114,14 @@ static void execute(Trie *t, char tokens[MAX_TOKENS][MAX_COMMAND_LENGTH + 1], in
         trie_display(t);
     }
 
+    /* Remove all words and prefixes from tree */
+    else if (!strcmp(tokens[0], "clear")) {
+        trie_clear(t);
+    }
+
     /* Quit program */
     else if (!strcmp(tokens[0], "quit")) {
-        exit(EXIT_SUCCESS);
+        exit(EXIT_SUCCESS); /* Clear and delete tree */
     }
 
     /* Invalid Command */
